@@ -48,3 +48,16 @@ docker run -p 8080:8080 -p 9990:9990 gntry/wildfly
 Navigate to the Wildfly management console, and see your configuration in action:
 
 ![Wildfly datasource](https://cloud.githubusercontent.com/assets/2477789/12618819/de7269ce-c515-11e5-8d15-a7e051c65462.png)
+
+# Additional notes
+This example will be updated with more Wildfly resources in the near future. E.g. A LDAP security realm and security domain will be added, as well as a JavaMail session, JMS/MQ resources, etc.
+
+As you can see the actual start command for Wildfly is passed in through the `CMD` instruction in the `Dockerfile`. This means that by default Wildfly is started, but you could start `bash` or simply `cat` the generated CLI script as well.
+
+For instance try:
+
+```
+docker run gntry/wildfly cat /tmp/config-server.cli
+docker run -it gntry/wildfly /bin/bash
+docker run -it gntry/wildfly /opt/jboss/wildfly/bin/jboss-cli.sh
+```
