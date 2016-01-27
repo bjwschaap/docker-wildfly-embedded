@@ -9,6 +9,7 @@ A new Wildfly container is generated using `docker build`. This build adds and p
 The first thing this script does it use `confd` to generate a `jboss-cli` CLI script. In this script all runtime configuration to be injected into Wildfly is put. The configuration is retrieved from any backend that `confd` supports (e.g. environment variables, `etcd`, `consul`, `zookeeper`, etc.). The second thing the start script does is start `jboss-cli` and run an embedded Wildfly container in management mode. This means the server is started, and can be configured, but doesn't accept any requests on the public and/or management interfaces. It then uses the generated CLI script to configure the Wildfly server. As the CLI script ends, the server is automatically stopped. In the third and final step the start script starts the Wildfly container in stand-alone mode, as the official `jboss/wildfly` container does.
 
 So it's kind of a 4 stage rocket:
+
 1. The container is built, and all needed resources are added and preconfigured (as long as they're not environment specific, e.g. JDBC drivers)
 2. At container start `confd` generates a `jboss-cli` script with all specific configurations
 3. `jboss-cli` is started with the generated CLI script from step 1. This starts the Wildfly server in embedded mode and configures environment specific resources (e.g. LDAP, datasources, JavaMail sessions, security domains, etc.)
@@ -42,3 +43,8 @@ Please note that the JSON format of the datasource definition needs to conform t
 docker build -t gntry/wildfly .
 docker run -p 8080:8080 -p 9990:9990 gntry/wildfly
 ```
+
+## See your configuration
+Navigate to the Wildfly management console, and see your configuration in action:
+
+![Wildfly datasource](https://cloud.githubusercontent.com/assets/2477789/12618819/de7269ce-c515-11e5-8d15-a7e051c65462.png)
