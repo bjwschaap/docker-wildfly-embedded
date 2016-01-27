@@ -1,0 +1,12 @@
+[template]
+prefix = "/myapp"
+src    = "config-server.cli.tmpl"
+dest   = "/tmp/config-server.cli"
+owner  = "jboss"
+mode   = "0644"
+log-level = "debug"
+keys   = [
+    "/datasources",
+    "/security-realms",
+    "/security-domains",
+]

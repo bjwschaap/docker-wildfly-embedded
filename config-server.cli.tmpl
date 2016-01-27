@@ -1,0 +1,24 @@
+# start the server in admin-only mode, using/modifying standalone-full.xml
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+# Apply all configuration to the server
+batch
+/interface=public:write-attribute(name=inet-address,value=0.0.0.0)
+/interface=management:write-attribute(name=inet-address,value=0.0.0.0)
+/subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql,driver-module-name=com.mysql.driver,driver-class-name=com.mysql.jdbc.Driver)
+/subsystem=datasources/jdbc-driver=mysqlXA:add(driver-name=mysqlXA,driver-module-name=com.mysql.driver,xa-datasource-class=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgresql.driver,driver-class-name=org.postgresql.Driver)
+/subsystem=datasources/jdbc-driver=postgresqlXA:add(driver-name=postgresqlXA,driver-module-name=org.postgresql.driver,xa-datasource-class=org.postgresql.xa.PGXADataSource)
+/subsystem=datasources/jdbc-driver=db2:add(driver-name=db2,driver-module-name=com.ibm.db2.driver,driver-class-name=com.ibm.db2.jcc.DB2Driver)
+/subsystem=datasources/jdbc-driver=db2XA:add(driver-name=db2XA,driver-module-name=com.ibm.db2.driver,xa-datasource-class=com.ibm.db2.jdbc.DB2XADataSource)
+{{range gets "/datasources/*"}}{{$data := json .Value}}data-source add --jndi-name=java:/jdbc/{{$data.name}} --name={{$data.name}}Pool --connection-url=jdbc:{{$data.type}}://{{$data.host}}:{{$data.port}}/{{$data.database}} --driver-name={{$data.type}} --user-name={{$data.username}} --password={{$data.password}}
+{{end}}
+run-batch
+
+# reload and apply all configuration, and make accessible from the outside world
+reload --admin-only=false
+
+# Stop embedded server
+stop-embedded-server
+
+# Configuration is persisted in standalone-full.xml for as long as the container runs.
