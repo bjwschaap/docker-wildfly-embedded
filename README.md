@@ -43,3 +43,8 @@ Please note that the JSON format of the datasource definition needs to conform t
 docker build -t gntry/wildfly .
 docker run -p 8080:8080 -p 9990:9990 gntry/wildfly
 ```
+
+## See your configuration
+Navigate to the Wildfly management console, and see your configuration in action:
+
+![Wildfly datasource](https://cloud.githubusercontent.com/assets/2477789/12618819/de7269ce-c515-11e5-8d15-a7e051c65462.png)
